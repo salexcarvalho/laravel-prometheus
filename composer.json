@@ -1,0 +1,21 @@
+{
+    "name": "eudovic/laravel-prometheus",
+    "description": "Pacote Prometheus para Laravel",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Eudovic\\PrometheusPHP\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    },
+    "extra": {
+      "laravel": {
+          "providers": [
+              "Eudovic\\PrometheusPHP\\Providers\\PrometheusServiceProvider"
+          ]
+      }
+    }
+  }
+  
