@@ -2,6 +2,7 @@
     "name": "eudovic/laravel-prometheus",
     "description": "Pacote Prometheus para Laravel",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Eudovic\\PrometheusPHP\\": "src/"
