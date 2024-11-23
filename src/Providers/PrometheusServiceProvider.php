@@ -17,6 +17,11 @@ class PrometheusServiceProvider extends ServiceProvider
             __DIR__ . '/../config/prometheus.php',
             'prometheus'
         );
+
+        $this->app->singleton(
+            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            \Eudovic\PrometheusPHP\Exceptions\Handler::class
+        );
     }
 
     public function boot()

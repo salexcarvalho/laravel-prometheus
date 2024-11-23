@@ -2,15 +2,18 @@
 
 namespace Eudovic\PrometheusPHP\Metrics\Types;
 
+use Eudovic\PrometheusPHP\Abstracts\AbstractMetric;
+use Eudovic\PrometheusPHP\Models\Message;
 
-class Gauge
+class Gauge extends AbstractMetric
 {
-    public static function metric(string $name, string|int $value, string $label)
+    const METRIC_TYPE = 'gauge';
+    
+    public static function addMetric(string $name, string|int $value, string $label)
     {
-        $metricString = "# HELP {$name} {$label}\n";
-        $metricString .= "# TYPE {$name} gauge\n";
-        $metricString .= "{$name} {$value}\n";
-
-        echo $metricString."\n";
+        $instance = new self();
+        $message = new Message();
+        $message->setMessage($name, [], $value);
+        $instance->metric(self::METRIC_TYPE, $name, $label, [$message]);
     }
 }

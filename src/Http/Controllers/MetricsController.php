@@ -27,8 +27,8 @@ class MetricsController
         HardwareMetrics::getMemoryMetrics();
         HardwareMetrics::getDiskMetrics();        
 
-        // App metrics
-        AppMetrics::getAppMetrics();
+        // // App metrics
+        AppMetrics::collectMetrics();
         
       
     }

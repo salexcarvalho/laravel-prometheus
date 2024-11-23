@@ -2,15 +2,18 @@
 
 namespace Eudovic\PrometheusPHP\Metrics\Types;
 
+use Eudovic\PrometheusPHP\Abstracts\AbstractMetric;
+use Eudovic\PrometheusPHP\Models\Message;
 
-class Counter
+class Counter extends AbstractMetric
 {
-    public static function metric(string $name, string|int $value, string $label)
-    {
-        $metricString = "# HELP {$name} {$label}\n";
-        $metricString .= "# TYPE {$name} counter\n";
-        $metricString .= "{$name} {$value}\n";
+    const METRIC_TYPE = 'counter';
 
-        echo $metricString."\n";
+    public static function addMetric(string $name, string|int $value, string $label)
+    {
+        $instance = new self();
+        $message = new Message();
+        $message->setMessage($name, [], $value);
+        $instance->metric(self::METRIC_TYPE, $name, $label, [$message]);
     }
 }

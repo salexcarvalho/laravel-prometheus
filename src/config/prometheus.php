@@ -10,6 +10,7 @@ return [
         'system_disk_total_bytes' => true,
         'db_query_performance' => true,
         'http_request_performance' => true,
+        'application_errors' => true,
     ],
     'stages_enabled' => [
         'local' => true,

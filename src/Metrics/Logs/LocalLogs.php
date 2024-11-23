@@ -1,6 +1,8 @@
 <?php
 namespace Eudovic\PrometheusPHP\Metrics\Logs;
 
+use Illuminate\Support\Facades\Config;
+
 class LocalLogs {
     public static function log(string $type = 'gauge', string $key, string $value, array $params = []) {
 
@@ -21,5 +23,28 @@ class LocalLogs {
 
     public static function path() {
         return config('prometheus.metrics_storage_options.local.path');
+    }
+
+    public static function read(string $path): ?array
+    {
+        if (!file_exists($path)) {
+            return null;
+        }
+
+        $content = file_get_contents($path);
+        return json_decode($content, true) ?: null;
+    }
+
+    public static function clear(string $path): void
+    {
+        if (file_exists($path)) {
+            file_put_contents($path, json_encode(['app' => []]));
+        }
+    }
+    
+    private static function isMetricEnabled(string $metric): bool
+    {
+        $metricsEnabled = Config::get('prometheus.metrics_enabled');
+        return $metricsEnabled[$metric] ?? false;
     }
 }

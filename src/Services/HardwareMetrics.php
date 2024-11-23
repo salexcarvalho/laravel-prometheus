@@ -15,13 +15,13 @@ class HardwareMetrics
         $cpuLoad = sys_getloadavg();
 
         if ($metricsEnabled['system_cpu_load_1m']) {
-            Gauge::metric('system_cpu_load_1m', $cpuLoad[0], 'Carga da CPU nos últimos 1 minuto');
+            Gauge::addMetric('system_cpu_load_1m', $cpuLoad[0], 'Carga da CPU nos últimos 1 minuto');
         }
         if ($metricsEnabled['system_cpu_load_5m']) {
-            Gauge::metric('system_cpu_load_5m', $cpuLoad[1], 'Carga da CPU nos últimos 5 minutos');
+            Gauge::addMetric('system_cpu_load_5m', $cpuLoad[1], 'Carga da CPU nos últimos 5 minutos');
         }
         if ($metricsEnabled['system_cpu_load_15m']) {
-            Gauge::metric('system_cpu_load_15m', $cpuLoad[2], 'Carga da CPU nos últimos 15 minutos');
+            Gauge::addMetric('system_cpu_load_15m', $cpuLoad[2], 'Carga da CPU nos últimos 15 minutos');
         }
     }
 
@@ -31,7 +31,7 @@ class HardwareMetrics
         $memoryUsage = memory_get_usage();
 
         if ($metricsEnabled['system_memory_usage_bytes']) {
-            Gauge::metric('system_memory_usage_bytes', $memoryUsage, 'Uso de memória pelo PHP em bytes');
+            Gauge::addMetric('system_memory_usage_bytes', $memoryUsage, 'Uso de memória pelo PHP em bytes');
         }
     }
 
@@ -42,10 +42,10 @@ class HardwareMetrics
         $diskTotal = disk_total_space("/");
 
         if ($metricsEnabled['system_disk_free_bytes']) {
-            Gauge::metric('system_disk_free_bytes', $diskFree, 'Espaço livre em disco em bytes');
+            Gauge::addMetric('system_disk_free_bytes', $diskFree, 'Espaço livre em disco em bytes');
         }
         if ($metricsEnabled['system_disk_total_bytes']) {
-            Gauge::metric('system_disk_total_bytes', $diskTotal, 'Espaço total em disco em bytes');
+            Gauge::addMetric('system_disk_total_bytes', $diskTotal, 'Espaço total em disco em bytes');
         }
     }
 
