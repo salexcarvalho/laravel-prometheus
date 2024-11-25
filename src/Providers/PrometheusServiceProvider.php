@@ -26,6 +26,12 @@ class PrometheusServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Eudovic\PrometheusPHP\Console\LocalLogFileVerificationCommand::class,
+            ]);
+        }
+
         $this->publishes([
             __DIR__ . '/../config/prometheus.php' => config_path('prometheus.php'),
         ], 'prometheus-php-config');

@@ -58,6 +58,7 @@ class AppMetrics
         }
     
         $grouped = [];
+        $output = [];
         foreach ($logs['app'] as $metric) {
             if ($metric['key'] !== $metricKey) {
                 continue;
