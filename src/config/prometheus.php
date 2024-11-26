@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'enable_auth_route' => true,
     'metrics_enabled' => [
         'system_cpu_load_1m' => true,
         'system_cpu_load_5m' => true,

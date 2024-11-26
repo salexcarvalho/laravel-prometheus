@@ -26,11 +26,19 @@ class PrometheusServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->app['router']->aliasMiddleware('auth.metric', \Eudovic\PrometheusPHP\Http\Middleware\AuthMetricMiddleware::class);
+        
         if ($this->app->runningInConsole()) {
             $this->commands([
                 \Eudovic\PrometheusPHP\Console\LocalLogFileVerificationCommand::class,
+                \Eudovic\PrometheusPHP\Console\CreateMetricsTokenCommand::class,
             ]);
         }
+
+        if(config('prometheus.enable_auth_route')) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        }
+       
 
         $this->publishes([
             __DIR__ . '/../config/prometheus.php' => config_path('prometheus.php'),

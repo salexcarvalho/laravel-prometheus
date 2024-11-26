@@ -19,6 +19,7 @@ A opção `--tag=prometheus-laravel-config` especifica que apenas o arquivo de c
 <?php
 
 return [
+    'enable_auth_route' => true,
     'metrics_enabled' => [
         'system_cpu_load_1m' => true,
         'system_cpu_load_5m' => true,
@@ -53,4 +54,9 @@ return [
 
 
 ````
+## Autenticando o Endpoint
+- No arquivo de configuração passe enable_auth_route para true
+- Rode 'php artisan migrate'
+- Rode eudovic:prometheus-make-token para obter o token
+
 
