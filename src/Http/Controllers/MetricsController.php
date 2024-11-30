@@ -18,6 +18,8 @@ class MetricsController
         }
 
         $this->standarMetrics();
+        return response('', 200)
+            ->header('Content-Type', 'text/plain');
     }
 
     private function standarMetrics()

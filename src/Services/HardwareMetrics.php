@@ -2,10 +2,14 @@
 
 namespace Eudovic\PrometheusPHP\Services;
 
-use Eudovic\PrometheusPHP\Metrics\Types\Counter;
 use Eudovic\PrometheusPHP\Metrics\Types\Gauge;
 use Illuminate\Support\Facades\Config;
 
+if (!function_exists('sys_getloadavg')) {
+    function sys_getloadavg() {
+        return [0, 0, 0];
+    }
+}
 class HardwareMetrics
 {
     
