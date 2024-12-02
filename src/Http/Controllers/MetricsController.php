@@ -17,21 +17,22 @@ class MetricsController
             return response('Metrics not enabled for this stage', 403);
         }
 
-        $this->standarMetrics();
-        return response('', 200)
+        $metrics = $this->standarMetrics();
+        return response($metrics, 200)
             ->header('Content-Type', 'text/plain');
     }
 
     private function standarMetrics()
     {
+        $metrics = '';
         // Hardware metrics
-        HardwareMetrics::getCPUMetrics();
-        HardwareMetrics::getMemoryMetrics();
-        HardwareMetrics::getDiskMetrics();        
+        $metrics .= HardwareMetrics::getCPUMetrics();
+        $metrics .= HardwareMetrics::getMemoryMetrics();
+        $metrics .= HardwareMetrics::getDiskMetrics();
 
         // // App metrics
-        AppMetrics::collectMetrics();
-        
-      
+        $metrics .= AppMetrics::collectMetrics();
+
+        return $metrics;
     }
 }

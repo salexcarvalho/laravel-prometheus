@@ -14,6 +14,6 @@ class Counter extends AbstractMetric
         $instance = new self();
         $message = new Message();
         $message->setMessage($name, [], $value);
-        $instance->metric(self::METRIC_TYPE, $name, $label, [$message]);
+        return $instance->metric(self::METRIC_TYPE, $name, $label, [$message]);
     }
 }

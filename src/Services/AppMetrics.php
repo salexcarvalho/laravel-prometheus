@@ -16,35 +16,39 @@ class AppMetrics
     private const HTTP_REQUEST_METRIC_KEY = 'http_request_execution_seconds';
     private const APP_ERROR_METRIC_KEY = 'application_errors';
 
-    public static function collectMetrics(): void
+    public static function collectMetrics(): string
     {
         try {
+
+            $metrics = '';
             $logPath = config('prometheus.metrics_storage_options.local.path');
 
             if (self::isMetricEnabled('db_query_performance')) {
                 $dbMetrics = self::processMetrics(self::DB_QUERY_METRIC_KEY, $logPath, fn($m) => $m['params']['query']);
                 foreach ($dbMetrics as $metric) {
-                    Summary::addMetric(self::DB_QUERY_METRIC_KEY, $metric, 'Tempo de execução das queries do banco de dados');
+                    $metrics .= Summary::addMetric(self::DB_QUERY_METRIC_KEY, $metric, 'Tempo de execução das queries do banco de dados');
                 }
             }
 
             if (self::isMetricEnabled('http_request_performance')) {
                 $requestMetrics = self::processMetrics(self::HTTP_REQUEST_METRIC_KEY, $logPath, fn($m) => $m['params']['path'] . ' ' . $m['params']['method']);
                 foreach ($requestMetrics as $metric) {
-                    Summary::addMetric(self::HTTP_REQUEST_METRIC_KEY, $metric, 'Tempo de execução das requisições HTTP');
+                    $metrics .= Summary::addMetric(self::HTTP_REQUEST_METRIC_KEY, $metric, 'Tempo de execução das requisições HTTP');
                 }
             }
 
             if (self::isMetricEnabled('application_errors')) {
                 $errorMetrics = self::processMetrics(self::APP_ERROR_METRIC_KEY, $logPath, fn($m) => $m['params']['exception']);
                 foreach ($errorMetrics as $metric) {
-                    Summary::addMetric(self::APP_ERROR_METRIC_KEY, $metric, 'Erros na aplicação');
+                    $metrics .= Summary::addMetric(self::APP_ERROR_METRIC_KEY, $metric, 'Erros na aplicação');
                 }
             }
 
             if (self::isLocalStorageEnabled()) {
                 LocalLogs::clear($logPath);
             }
+
+            return $metrics;
         } catch (Exception $e) {
             Log::error('Error collecting metrics', ['error' => $e->getMessage()]);
         }

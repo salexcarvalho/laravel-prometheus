@@ -26,7 +26,7 @@ abstract class AbstractMetric implements MetricInterface, SampleObservationMetri
         $this->key = $key;
         $this->label = $label;
         $this->values = $this->validateMessages($messages);
-        echo $this->formatMetric($type, $key, $label, $messages);
+        return $this->formatMetric($type, $key, $label, $messages);
     }
 
     public function validateType(string $type): string

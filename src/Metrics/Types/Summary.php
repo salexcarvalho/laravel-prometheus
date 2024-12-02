@@ -19,6 +19,6 @@ class Summary extends AbstractMetric
             return $message;
         }, $metrics);
 
-        $instance->metric(self::METRIC_TYPE, $name, $label, $messages);
+        return $instance->metric(self::METRIC_TYPE, $name, $label, $messages);
     }
 }
