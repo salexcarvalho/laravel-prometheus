@@ -7,6 +7,7 @@ use Eudovic\PrometheusPHP\Metrics\Logs\LogMetrics;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class PrometheusServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,10 @@ class PrometheusServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['router']->aliasMiddleware('auth.metric', \Eudovic\PrometheusPHP\Http\Middleware\AuthMetricMiddleware::class);
-        
+
+        $kernel = $this->app->make(\Illuminate\Contracts\Http\Kernel::class);
+        $kernel->pushMiddleware(\Eudovic\PrometheusPHP\Http\Middleware\LogRequestMetrics::class);
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 \Eudovic\PrometheusPHP\Console\LocalLogFileVerificationCommand::class,
@@ -35,18 +39,17 @@ class PrometheusServiceProvider extends ServiceProvider
             ]);
         }
 
-        if(config('prometheus.enable_auth_route')) {
+        if (config('prometheus.enable_auth_route')) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
-       
+
 
         $this->publishes([
             __DIR__ . '/../config/prometheus.php' => config_path('prometheus.php'),
         ], 'prometheus-php-config');
 
         $this->dbListener();
-        $this->requestListener();
-        
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
@@ -55,16 +58,9 @@ class PrometheusServiceProvider extends ServiceProvider
         DB::listen(function (QueryExecuted $query) {
             $executionTime = $query->time / 1000;
             $querySql = $query->sql;
-            LogMetrics::log(config('prometheus.metrics_storage'), 'summary', 'db_query_execution_seconds', $executionTime, ['query' => $querySql]);
+            $querySql = str_replace('"', "'", $querySql);
+            $connectionName = $query->connectionName;
+            LogMetrics::log(config('prometheus.metrics_storage'), 'summary', 'db_query_execution_seconds', $executionTime, ['query' => $querySql, 'connection' => $connectionName]);
         });
-    }
-
-    private function requestListener()
-    {
-        $request = request();
-        $path = $request->path();
-        $method = $request->method();
-        $executionTime = microtime(true) - LARAVEL_START;
-        LogMetrics::log(config('prometheus.metrics_storage'), 'summary', 'http_request_execution_seconds', $executionTime, ['path' => $path, 'method' => $method]);
     }
 }

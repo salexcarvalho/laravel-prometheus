@@ -17,7 +17,7 @@ class MetricsController
             return response('Metrics not enabled for this stage', 403);
         }
 
-        $metrics = $this->standarMetrics();
+        $metrics = trim($this->standarMetrics());
         return response($metrics, 200)
             ->header('Content-Type', 'text/plain');
     }
