@@ -43,6 +43,8 @@ class HardwareMetrics
         if ($metricsEnabled['system_memory_usage_bytes']) {
             $metrics .= Gauge::addMetric('system_memory_usage_bytes', $memoryUsage, 'Uso de memória pelo PHP em bytes');
         }
+
+        return $metrics;
     }
 
     public static function getDiskMetrics()
@@ -59,5 +61,7 @@ class HardwareMetrics
         if ($metricsEnabled['system_disk_total_bytes']) {
             $metrics .= Gauge::addMetric('system_disk_total_bytes', $diskTotal, 'Espaço total em disco em bytes');
         }
+
+        return $metrics;
     }
 }
