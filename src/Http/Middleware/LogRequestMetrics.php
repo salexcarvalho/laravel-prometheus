@@ -22,6 +22,7 @@ class LogRequestMetrics
         $path = $request->path();
         $method = $request->method();
         $status = $response->getStatusCode();
+        $ip = $request->ip();
 
         LogMetrics::log(
             config('prometheus.metrics_storage'),
@@ -32,6 +33,7 @@ class LogRequestMetrics
                 'path' => $path,
                 'method' => $method,
                 'status' => $status,
+                'ip' => $ip,
             ]
         );
 
